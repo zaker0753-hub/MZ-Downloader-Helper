@@ -24,6 +24,7 @@ class Config:
     download_timeout: int
     format_detection_timeout: int
     llm_timeout: int
+    auto_cleanup: bool
 
     @classmethod
     def from_env(cls) -> "Config":
@@ -53,6 +54,7 @@ class Config:
             download_timeout=int(os.getenv("DOWNLOAD_TIMEOUT", "1800")),  # 30 minutes
             format_detection_timeout=int(os.getenv("FORMAT_DETECTION_TIMEOUT", "30")),
             llm_timeout=int(os.getenv("LLM_TIMEOUT", "30")),
+            auto_cleanup=os.getenv("AUTO_CLEANUP", "true").lower() in ("true", "1", "yes"),
         )
 
     @property
