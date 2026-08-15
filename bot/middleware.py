@@ -56,7 +56,7 @@ def whitelist_only(func: Callable[[Update, ContextTypes.DEFAULT_TYPE], Coroutine
         user_status = user_service.get_user_status(user.id)
         if user_status is None or user_status == "":
             # New user - auto-approve them
-            user_service.approve_user(user.id, admin_id=None)
+            user_service.approve_user(user.id, approved_by=None)
             logger.info(f"Auto-approved new user {user.id} (@{user.username})")
             return await func(update, context)
 

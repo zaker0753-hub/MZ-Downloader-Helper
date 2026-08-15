@@ -10,9 +10,9 @@ error, and no token in it.
 import logging
 
 import pytest
-from telegram.error import InvalidToken
+from telegram.error import Conflict, InvalidToken
 
-from bot.startup import EXIT_INVALID_TOKEN, run_bot
+from bot.startup import EXIT_ALREADY_RUNNING, EXIT_INVALID_TOKEN, run_bot
 
 FAKE_TOKEN = "1234567890:AA" + "x" * 33
 
@@ -54,6 +54,28 @@ class TestRunBotWithRejectedToken:
             run_bot(_app_rejecting_token())
 
         assert "Traceback" not in caplog.text
+
+
+class TestRunBotWithConflict:
+    """Tests for handling Conflict error (duplicate bot instance)."""
+
+    def _app_conflicting(self):
+        from unittest.mock import MagicMock
+        app = MagicMock()
+        app.run_polling.side_effect = Conflict(
+            "Conflict: terminated by other getUpdates request"
+        )
+        return app
+
+    def test_exits_with_already_running_code(self):
+        with pytest.raises(SystemExit) as excinfo:
+            run_bot(self._app_conflicting())
+        assert excinfo.value.code == EXIT_ALREADY_RUNNING
+
+    def test_explains_the_conflict(self, caplog):
+        with caplog.at_level(logging.ERROR), pytest.raises(SystemExit):
+            run_bot(self._app_conflicting())
+        assert "conflict" in caplog.text.lower()
 
 
 class TestRunBotNormally:

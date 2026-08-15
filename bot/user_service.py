@@ -176,7 +176,7 @@ class UserService:
             logger.exception("Failed to create access request")
             return False
 
-    def approve_user(self, telegram_id: int, approved_by: int) -> bool:
+    def approve_user(self, telegram_id: int, approved_by: int | None = None) -> bool:
         """Approve a user's access request."""
         now = datetime.now(timezone.utc).replace(tzinfo=None).isoformat()
         try:

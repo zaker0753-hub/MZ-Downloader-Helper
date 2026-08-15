@@ -85,9 +85,19 @@ def main():
     # Register handlers
     register_handlers(app)
 
+    # Acquire singleton lock to prevent duplicate instances
+    lock_path = run_bot_acquire = None
+    try:
+        from bot.startup import acquire_lock, release_lock
+        lock_path = acquire_lock(config.download_path)
+    except SystemExit:
+        raise
+    except Exception:
+        logger.exception("Failed to acquire lock, continuing anyway")
+
     # Start the bot
     logger.info("Bot is running. Press Ctrl+C to stop.")
-    run_bot(app)
+    run_bot(app, lock_path=lock_path)
 
 
 if __name__ == "__main__":
