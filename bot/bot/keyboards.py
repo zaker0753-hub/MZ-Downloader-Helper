@@ -1,0 +1,191 @@
+from typing import TYPE_CHECKING
+
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+
+if TYPE_CHECKING:
+    from bot.downloader import AudioFormat, VideoFormat
+
+
+# Callback data prefixes
+FORMAT_PREFIX = "format:"
+QUALITY_PREFIX = "quality:"
+CONFIRM_PREFIX = "confirm:"
+CANCEL_PREFIX = "cancel:"
+DELETE_PREFIX = "delete:"
+ACCESS_PREFIX = "access:"
+ADMIN_PREFIX = "admin:"
+
+
+def format_selection_keyboard() -> InlineKeyboardMarkup:
+    """Create keyboard for format selection (audio/video)."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🎵 صدا", callback_data=f"{FORMAT_PREFIX}audio"),
+            InlineKeyboardButton("🎬 ویدیو", callback_data=f"{FORMAT_PREFIX}video"),
+        ],
+        [
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
+        ]
+    ])
+
+
+def audio_quality_keyboard() -> InlineKeyboardMarkup:
+    """Create keyboard for audio quality selection."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("128 kbps", callback_data=f"{QUALITY_PREFIX}audio_128"),
+            InlineKeyboardButton("192 kbps", callback_data=f"{QUALITY_PREFIX}audio_192"),
+        ],
+        [
+            InlineKeyboardButton("320 kbps", callback_data=f"{QUALITY_PREFIX}audio_320"),
+            InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}audio_best"),
+        ],
+        [
+            InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
+        ]
+    ])
+
+
+def video_quality_keyboard() -> InlineKeyboardMarkup:
+    """Create keyboard for video quality selection (fallback with default options)."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("480p", callback_data=f"{QUALITY_PREFIX}video_480"),
+            InlineKeyboardButton("720p", callback_data=f"{QUALITY_PREFIX}video_720"),
+        ],
+        [
+            InlineKeyboardButton("1080p", callback_data=f"{QUALITY_PREFIX}video_1080"),
+            InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}video_best"),
+        ],
+        [
+            InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
+        ]
+    ])
+
+
+def dynamic_video_quality_keyboard(formats: list["VideoFormat"]) -> InlineKeyboardMarkup:
+    """Create keyboard for video quality selection with dynamic options."""
+    buttons = []
+    row = []
+
+    for fmt in formats:
+        # Use video_{height} format for callback data
+        row.append(
+            InlineKeyboardButton(fmt.label, callback_data=f"{QUALITY_PREFIX}video_{fmt.height}")
+        )
+        if len(row) == 2:
+            buttons.append(row)
+            row = []
+
+    # Add remaining button if odd number
+    if row:
+        buttons.append(row)
+
+    # Add "Best" option
+    buttons.append([InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}video_best")])
+
+    # Add navigation buttons
+    buttons.append([
+        InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+        InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
+    ])
+
+    return InlineKeyboardMarkup(buttons)
+
+
+def dynamic_audio_quality_keyboard(formats: list["AudioFormat"]) -> InlineKeyboardMarkup:
+    """Create keyboard for audio quality selection with dynamic options."""
+    buttons = []
+    row = []
+
+    for fmt in formats:
+        # Use audio_{bitrate} format for callback data
+        row.append(
+            InlineKeyboardButton(fmt.label, callback_data=f"{QUALITY_PREFIX}audio_{fmt.bitrate}")
+        )
+        if len(row) == 2:
+            buttons.append(row)
+            row = []
+
+    # Add remaining button if odd number
+    if row:
+        buttons.append(row)
+
+    # Add "Best" option
+    buttons.append([InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}audio_best")])
+
+    # Add navigation buttons
+    buttons.append([
+        InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+        InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
+    ])
+
+    return InlineKeyboardMarkup(buttons)
+
+
+def playlist_confirmation_keyboard(count: int) -> InlineKeyboardMarkup:
+    """Create keyboard for playlist download confirmation."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton(
+                f"✅ دانلود همه {count} آیتم",
+                callback_data=f"{CONFIRM_PREFIX}playlist"
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                "📄 فقط اولین آیتم",
+                callback_data=f"{CONFIRM_PREFIX}single"
+            ),
+        ],
+        [
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
+        ]
+    ])
+
+
+def file_delete_keyboard(token: str) -> InlineKeyboardMarkup:
+    """Create keyboard with delete button for large files."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🗑️ حذف از سرور", callback_data=f"{DELETE_PREFIX}{token}"),
+        ]
+    ])
+
+
+def request_access_keyboard() -> InlineKeyboardMarkup:
+    """Create keyboard with request access button for unauthorized users."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("🔐 درخواست دسترسی", callback_data=f"{ACCESS_PREFIX}request"),
+        ]
+    ])
+
+
+def admin_access_decision_keyboard(telegram_id: int) -> InlineKeyboardMarkup:
+    """Create keyboard for admin to approve/deny access request."""
+    return InlineKeyboardMarkup([
+        [
+            InlineKeyboardButton("✅ تایید", callback_data=f"{ADMIN_PREFIX}approve:{telegram_id}"),
+            InlineKeyboardButton("❌ رد", callback_data=f"{ADMIN_PREFIX}deny:{telegram_id}"),
+        ]
+    ])
+
+
+def parse_callback_data(data: str) -> tuple[str, str]:
+    """
+    Parse callback data into prefix and action.
+
+    Returns:
+        Tuple of (prefix, action)
+    """
+    if ":" in data:
+        prefix, action = data.split(":", 1)
+        prefix = prefix + ":"
+    else:
+        prefix = ""
+        action = data
+
+    return prefix, action
