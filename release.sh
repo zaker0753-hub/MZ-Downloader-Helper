@@ -1,0 +1,22 @@
+#!/bin/bash
+set -e
+
+# Configure your registry here (e.g., ghcr.io/username, docker.io/username)
+REGISTRY="${REGISTRY:-ghcr.io/driversti}"
+IMAGE_NAME="ytdlp-telegram"
+
+# Read version from config.py (single source of truth)
+VERSION="v$(grep '__version__' config.py | cut -d'"' -f2)"
+
+echo "🚀 Building and pushing ${REGISTRY}/${IMAGE_NAME}:${VERSION}"
+
+# Create/use buildx builder for multi-arch
+docker buildx create --name multiarch --use 2>/dev/null || docker buildx use multiarch
+
+# Build and push multi-arch image with both tags
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t ${REGISTRY}/${IMAGE_NAME}:${VERSION} \
+  -t ${REGISTRY}/${IMAGE_NAME}:latest \
+  --push .
+
+echo "✅ Done! Image pushed to ${REGISTRY}/${IMAGE_NAME}:${VERSION} and :latest"
