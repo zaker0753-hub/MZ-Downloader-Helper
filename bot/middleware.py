@@ -45,7 +45,7 @@ def whitelist_only(func: Callable[[Update, ContextTypes.DEFAULT_TYPE], Coroutine
                 if config.admin_user_id and user.id == config.admin_user_id:
                     return await func(update, context)
                 else:
-                    await update.callback_query.answer("Only admin can do this", show_alert=True)
+                    await update.callback_query.answer("فقط ادمین می‌تواند این کار را انجام دهد", show_alert=True)
                     return
 
         # Check if user is allowed (env whitelist or DB approved)
@@ -56,7 +56,7 @@ def whitelist_only(func: Callable[[Update, ContextTypes.DEFAULT_TYPE], Coroutine
         user_status = user_service.get_user_status(user.id)
         if user_status is None or user_status == "":
             # New user - auto-approve them
-            user_service.approve_user(user.id, approved_by=None)
+            user_service.approve_user(user.id, admin_id=None)
             logger.info(f"Auto-approved new user {user.id} (@{user.username})")
             return await func(update, context)
 
@@ -66,20 +66,20 @@ def whitelist_only(func: Callable[[Update, ContextTypes.DEFAULT_TYPE], Coroutine
         if update.message:
             if user_status == "pending":
                 await update.message.reply_text(
-                    "⏳ Your access request is pending approval.\n"
-                    "You'll be notified when an admin reviews your request."
+                    "⏳ درخواست دسترسی شما در انتظار تایید است.\n"
+                    "وقتی ادمین درخواست شما را بررسی کند، مطلع می‌شوید."
                 )
             elif user_status == "denied":
                 await update.message.reply_text(
-                    "⛔ Your access request was denied.\n"
-                    "This is a private bot for personal use only."
+                    "⛔ درخواست دسترسی شما رد شد.\n"
+                    "این ربات خصوصی است و فقط برای استفاده شخصی است."
                 )
             else:
                 # No existing request - show request access button
                 await update.message.reply_text(
-                    "⛔ You are not authorized to use this bot.\n"
-                    "This is a private bot for personal use only.\n\n"
-                    "You can request access from the admin:",
+                    "⛔ شما مجاز به استفاده از این ربات نیستید.\n"
+                    "این ربات خصوصی است و فقط برای استفاده شخصی است.\n\n"
+                    "می‌توانید از ادمین درخواست دسترسی کنید:",
                     reply_markup=request_access_keyboard(),
                 )
         return

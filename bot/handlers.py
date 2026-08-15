@@ -42,7 +42,7 @@ from bot.keyboards import (
 from bot.llm_service import llm_service
 from bot.middleware import whitelist_only
 from bot.stats_service import stats_service
-from bot.storage import cleanup_file, detect_platform, is_file_within_limit
+from bot.storage import detect_platform, is_file_within_limit
 from bot.user_service import user_service
 from config import get_config
 
@@ -109,21 +109,21 @@ async def _get_public_ip() -> str:
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /start command."""
     await update.message.reply_text(
-        "👋 Welcome to the Media Downloader Bot!\n\n"
-        "Send me a URL from:\n"
-        "• YouTube\n"
-        "• Instagram\n"
-        "• Twitter/X\n"
-        "• Facebook\n"
-        "• TikTok\n"
-        "• And 1000+ other sites!\n\n"
-        "You can also use natural language:\n"
-        "• \"download audio from <url>\"\n"
-        "• \"grab this video <url>\"\n\n"
-        "Commands:\n"
-        "/help - Show this help message\n"
-        "/status - Check queue status\n"
-        "/stats - View download statistics"
+        "👋 به ربات دانلودر خوش آمدید!\n\n"
+        "یک لینک از این سایت‌ها بفرستید:\n"
+        "• یوتیوب\n"
+        "• اینستاگرام\n"
+        "• توییتر/ایکس\n"
+        "• فیسبوک\n"
+        "• تیک‌تاک\n"
+        "• و بیش از ۱۰۰۰ سایت دیگر!\n\n"
+        "همچنین می‌توانید از زبان طبیعی استفاده کنید:\n"
+        "• «دانلود صدا از <link>»\n"
+        "• «این ویدیو رو بگیر <link>»\n\n"
+        "دستورات:\n"
+        "/help - نمایش راهنما\n"
+        "/status - وضعیت صف\n"
+        "/stats - آمار دانلودها"
     )
 
 
@@ -131,26 +131,26 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Handle /help command."""
     await update.message.reply_text(
-        "📖 *How to use this bot:*\n\n"
-        "*1. Send a URL*\n"
-        "Just paste any supported URL and I'll ask you to choose format and quality.\n\n"
-        "*2. Natural Language*\n"
-        "You can say things like:\n"
-        "• \"download the audio from youtube.com/...\"\n"
-        "• \"get this video in best quality\"\n\n"
-        "*3. Quality Options*\n"
-        "🎵 Audio: 128kbps, 192kbps, 320kbps, Best\n"
-        "🎬 Video: 480p, 720p, 1080p, Best\n\n"
-        "*4. File Limits*\n"
-        "Files up to 50MB can be sent directly in Telegram.\n"
-        "Larger files are saved to the server.\n\n"
-        "*Supported Platforms:*\n"
-        "YouTube, Instagram, Twitter/X, Facebook, TikTok, Vimeo, Reddit, Twitch, and 1000+ more!\n\n"
-        "*Other Commands:*\n"
-        "/status - Queue status\n"
-        "/stats - Download statistics\n"
-        "/health - System health\n"
-        "/about - Bot version and host info",
+        "📖 *راهنمای استفاده:*\n\n"
+        "*۱. ارسال لینک*\n"
+        "کافیه لینک مورد نظر رو بفرستید تا فرمت و کیفیت رو انتخاب کنید.\n\n"
+        "*۲. زبان طبیعی*\n"
+        "می‌توانید مثلاً بگویید:\n"
+        "• «صدا رو از یوتیوب دانلود کن»\n"
+        "• «این ویدیو رو با بهترین کیفیت بگیر»\n\n"
+        "*۳. تنظیمات کیفیت*\n"
+        "🎵 صدا: ۱۲۸kbps، ۱۹۲kbps، ۳۲۰kbps، بهترین\n"
+        "🎬 ویدیو: ۴۸۰p، ۷۲۰p، ۱۰۸۰p، بهترین\n\n"
+        "*۴. محدودیت فایل*\n"
+        "فایل‌های تا ۵۰MB مستقیماً در تلگرام ارسال می‌شوند.\n"
+        "فایل‌های بزرگتر در سرور ذخیره می‌شوند.\n\n"
+        "*پلتفرم‌های پشتیبانی‌شده:*\n"
+        "یوتیوب، اینستاگرام، توییتر/ایکس، فیسبوک، تیک‌تاک، ویمئو، ردیت، توئیچ و بیش از ۱۰۰۰ سایت دیگر!\n\n"
+        "*سایر دستورات:*\n"
+        "/status - وضعیت صف\n"
+        "/stats - آمار دانلودها\n"
+        "/health - سلامت سیستم\n"
+        "/about - نسخه ربات و اطلاعات میزبان",
         parse_mode="Markdown"
     )
 
@@ -161,9 +161,9 @@ async def status_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     active, queued = await download_queue.get_queue_status()
 
     await update.message.reply_text(
-        f"📊 *Queue Status*\n\n"
-        f"Active downloads: {active}\n"
-        f"Items in queue: {queued}",
+        f"📊 *وضعیت صف*\n\n"
+        f"دانلودهای فعال: {active}\n"
+        f"آیتم‌های در صف: {queued}",
         parse_mode="Markdown"
     )
 
@@ -175,13 +175,13 @@ async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     from pathlib import Path
 
     config = get_config()
-    text = "🏥 *System Health*\n\n"
+    text = "🏥 *سلامت سیستم*\n\n"
 
     # Queue status
     active, queued = await download_queue.get_queue_status()
-    text += "*Download Queue:*\n"
-    text += f"• Active: {active}\n"
-    text += f"• Queued: {queued}\n\n"
+    text += "*صف دانلود:*\n"
+    text += f"• فعال: {active}\n"
+    text += f"• در صف: {queued}\n\n"
 
     # Disk space
     download_path = Path(config.download_path)
@@ -192,24 +192,24 @@ async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         total_gb = total / (1024**3)
         usage_percent = (used / total) * 100
 
-        text += "*Disk Space:*\n"
-        text += f"• Free: {free_gb:.1f} GB\n"
-        text += f"• Used: {used_gb:.1f} GB ({usage_percent:.0f}%)\n"
-        text += f"• Total: {total_gb:.1f} GB\n\n"
+        text += "*فضای دیسک:*\n"
+        text += f"• آزاد: {free_gb:.1f} GB\n"
+        text += f"• استفاده‌شده: {used_gb:.1f} GB ({usage_percent:.0f}%)\n"
+        text += f"• کل: {total_gb:.1f} GB\n\n"
     else:
-        text += "*Disk Space:* ⚠️ Download path not found\n\n"
+        text += "*فضای دیسک:* ⚠️ مسیر دانلود پیدا نشد\n\n"
 
     # Ollama status
     text += "*Ollama LLM:*\n"
     try:
         ollama_available = await llm_service.is_available()
         if ollama_available:
-            text += "• Status: ✅ Connected\n"
+            text += "• وضعیت: ✅ متصل\n"
             text += f"• Model: {config.ollama_model}\n\n"
         else:
-            text += "• Status: ❌ Disconnected\n\n"
+            text += "• وضعیت: ❌ قطع\n\n"
     except Exception:  # noqa: BLE001 — best-effort boundary: an optional feature must not take the bot down
-        text += "• Status: ❌ Error checking\n\n"
+        text += "• وضعیت: ❌ خطا در بررسی\n\n"
 
     # File server status
     text += "*File Server:*\n"
@@ -218,11 +218,11 @@ async def health_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         async with httpx.AsyncClient(timeout=5.0) as client:
             response = await client.get(f"{config.file_server_url}/health")
             if response.status_code == 200:
-                text += "• Status: ✅ Connected\n"
+                text += "• وضعیت: ✅ متصل\n"
             else:
                 text += f"• Status: ⚠️ Error ({response.status_code})\n"
     except Exception:  # noqa: BLE001 — best-effort boundary: an optional feature must not take the bot down
-        text += "• Status: ❌ Disconnected\n"
+        text += "• وضعیت: ❌ قطع\n"
 
     await update.message.reply_text(text, parse_mode="Markdown")
 
@@ -239,22 +239,22 @@ async def about_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     public_ip = await _get_public_ip()
 
     text = (
-        "ℹ️ *About this bot*\n\n"
-        "*🤖 Bot*\n"
-        f"• Name: ytdlp-telegram\n"
-        f"• Version: `{__version__}`\n"
-        "• License: MIT\n"
+        "ℹ️ *درباره این ربات*\n\n"
+        "*🤖 ربات*\n"
+        f"• نام: ytdlp-telegram\n"
+        f"• نسخه: `{__version__}`\n"
+        "• مجوز: MIT\n"
         "• Source: https://github.com/driversti/ytdlp-telegram\n\n"
-        "*🖥️ Server*\n"
-        f"• Host: `{platform.node() or 'unknown'}`\n"
-        f"• OS: {platform.system()} {platform.release()}\n"
-        f"• Architecture: {platform.machine()}\n"
-        f"• LAN IP: `{local_ip}`\n"
-        f"• Public IP: `{public_ip}`\n\n"
-        "*🐍 Runtime*\n"
-        f"• Python: {platform.python_version()}\n"
+        "*🖥️ سرور*\n"
+        f"• میزبان: `{platform.node() or 'نامشخص'}`\n"
+        f"• سیستم‌عامل: {platform.system()} {platform.release()}\n"
+        f"• معماری: {platform.machine()}\n"
+        f"• IP محلی: `{local_ip}`\n"
+        f"• IP عمومی: `{public_ip}`\n\n"
+        "*🐍 محیط اجرا*\n"
+        f"• پایتون: {platform.python_version()}\n"
         f"• yt-dlp: {yt_dlp.version.__version__}\n\n"
-        f"*⏱️ Uptime:* {uptime}"
+        f"*⏱️ زمان کارکرد:* {uptime}"
     )
 
     await update.message.reply_text(
@@ -271,30 +271,30 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     overall = stats_service.get_overall_stats()
     user_stats = stats_service.get_user_stats(user_id)
 
-    text = "📈 *Download Statistics*\n\n"
+    text = "📈 *آمار دانلودها*\n\n"
 
     # Overall stats
-    text += "*Overall:*\n"
-    text += f"• Total downloads: {overall.total_downloads}\n"
-    text += f"• Total size: {overall.total_size_mb:.1f} MB\n"
-    text += f"• This month: {overall.downloads_this_month} downloads ({overall.size_this_month_mb:.1f} MB)\n\n"
+    text += "*کلی:*\n"
+    text += f"• کل دانلودها: {overall.total_downloads}\n"
+    text += f"• حجم کل: {overall.total_size_mb:.1f} MB\n"
+    text += f"• این ماه: {overall.downloads_this_month} دانلود ({overall.size_this_month_mb:.1f} MB)\n\n"
 
     # Platform breakdown
     if overall.platforms:
-        text += "*By platform:*\n"
+        text += "*بر اساس پلتفرم:*\n"
         for platform, count in list(overall.platforms.items())[:5]:
             text += f"• {platform.capitalize()}: {count}\n"
         text += "\n"
 
     # User stats
     if user_stats:
-        text += "*Your stats:*\n"
-        text += f"• Downloads: {user_stats.total_downloads}\n"
-        text += f"• Total size: {user_stats.total_size_mb:.1f} MB\n"
-        text += f"• Audio: {user_stats.audio_downloads} | Video: {user_stats.video_downloads}\n"
-        text += f"• Favorite platform: {user_stats.favorite_platform.capitalize()}\n"
+        text += "*آمار شما:*\n"
+        text += f"• دانلودها: {user_stats.total_downloads}\n"
+        text += f"• حجم کل: {user_stats.total_size_mb:.1f} MB\n"
+        text += f"• صدا: {user_stats.audio_downloads} | ویدیو: {user_stats.video_downloads}\n"
+        text += f"• پلتفرم محبوب: {user_stats.favorite_platform.capitalize()}\n"
     else:
-        text += "_You haven't downloaded anything yet!_"
+        text += "_شما هنوز چیزی دانلود نکرده‌اید!_"
 
     await update.message.reply_text(text, parse_mode="Markdown")
 
@@ -315,12 +315,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # No URLs found
         if intent.is_download_request:
             await message.reply_text(
-                "🔗 I didn't find any URL in your message.\n"
-                "Please include a valid link to download."
+                "🔗 هیچ لینکی در پیام شما پیدا نکردم.\n"
+                "لطفاً یک لینک معتبر برای دانلود وارد کنید."
             )
         else:
             await message.reply_text(
-                "👋 Send me a URL to download media, or use /help for more info."
+                "👋 یک لینک برای دانلود بفرستید، یا از /help برای اطلاعات بیشتر استفاده کنید."
             )
         return
 
@@ -329,7 +329,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data['pending_url'] = url
 
     # Check if it's a playlist
-    status_msg = await message.reply_text("⏳ Checking URL...")
+    status_msg = await message.reply_text("⏳ در حال بررسی لینک...")
     downloader = Downloader()
     media_info = await downloader.get_info(url)
 
@@ -337,10 +337,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         # It's a playlist - ask for confirmation
         context.user_data['pending_playlist_count'] = media_info.playlist_count
         await status_msg.edit_text(
-            f"📋 *Playlist detected!*\n\n"
-            f"*Title:* {media_info.title}\n"
-            f"*Videos:* {media_info.playlist_count}\n\n"
-            f"What would you like to do?",
+            f"📋 *پلی‌لیست شناسایی شد!*\n\n"
+            f"*عنوان:* {media_info.title}\n"
+            f"*ویدیوها:* {media_info.playlist_count}\n\n"
+            f"چه کاری می‌خواهید انجام دهید؟",
             reply_markup=playlist_confirmation_keyboard(media_info.playlist_count),
             parse_mode="Markdown"
         )
@@ -354,7 +354,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         # Show format selection
         await status_msg.edit_text(
-            "🎯 *Choose format:*",
+            "🎯 *انتخاب فرمت:*",
             reply_markup=format_selection_keyboard(),
             parse_mode="Markdown"
         )
@@ -363,7 +363,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def show_audio_quality(status_msg):
     """Show audio quality selection."""
     await status_msg.edit_text(
-        "🎵 *Choose audio quality:*",
+        "🎵 *انتخاب کیفیت صدا:*",
         reply_markup=audio_quality_keyboard(),
         parse_mode="Markdown"
     )
@@ -372,7 +372,7 @@ async def show_audio_quality(status_msg):
 async def show_video_quality(status_msg):
     """Show video quality selection."""
     await status_msg.edit_text(
-        "🎬 *Choose video quality:*",
+        "🎬 *انتخاب کیفیت ویدیو:*",
         reply_markup=video_quality_keyboard(),
         parse_mode="Markdown"
     )
@@ -390,7 +390,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if prefix == CANCEL_PREFIX:
         context.user_data.pop('pending_url', None)
         context.user_data.pop('pending_formats', None)
-        await query.edit_message_text("❌ Download cancelled.")
+        await query.edit_message_text("❌ دانلود لغو شد.")
         return
 
     if prefix == DELETE_PREFIX:
@@ -398,10 +398,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         success = await file_server_client.delete_file(token)
         if success:
             await query.edit_message_text(
-                query.message.text + "\n\n🗑️ File deleted from server."
+                query.message.text + "\n\n🗑️ فایل از سرور حذف شد."
             )
         else:
-            await query.answer("Failed to delete file", show_alert=True)
+            await query.answer("حذف فایل ناموفق بود", show_alert=True)
         return
 
     if prefix == ACCESS_PREFIX:
@@ -415,7 +415,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Now check for pending_url (only needed for format/quality/confirm)
     url = context.user_data.get('pending_url')
     if not url:
-        await query.edit_message_text("❌ Session expired. Please send the URL again.")
+        await query.edit_message_text("❌ نشست منقضی شد. لطفاً لینک را دوباره بفرستید.")
         return
 
     if prefix == FORMAT_PREFIX:
@@ -426,7 +426,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         elif action == "back":
             context.user_data.pop('pending_formats', None)
             await query.edit_message_text(
-                "🎯 *Choose format:*",
+                "🎯 *انتخاب فرمت:*",
                 reply_markup=format_selection_keyboard(),
                 parse_mode="Markdown"
             )
@@ -451,7 +451,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # Store that this is a playlist download, then show format selection
             context.user_data['is_playlist_download'] = True
             await query.edit_message_text(
-                "🎯 *Choose format for all videos:*",
+                "🎯 *انتخاب فرمت برای همه ویدیوها:*",
                 reply_markup=format_selection_keyboard(),
                 parse_mode="Markdown"
             )
@@ -459,7 +459,7 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
             # User wants only the first item
             context.user_data['is_playlist_download'] = False
             await query.edit_message_text(
-                "🎯 *Choose format:*",
+                "🎯 *انتخاب فرمت:*",
                 reply_markup=format_selection_keyboard(),
                 parse_mode="Markdown"
             )
@@ -475,8 +475,8 @@ async def handle_access_callback(query, context: ContextTypes.DEFAULT_TYPE, acti
         existing_status = user_service.get_user_status(user.id)
         if existing_status == "pending":
             await query.edit_message_text(
-                "⏳ You already have a pending access request.\n"
-                "You'll be notified when an admin reviews your request."
+                "⏳ شما از قبل یک درخواست دسترسی در انتظار دارید.\n"
+                "وقتی ادمین درخواست شما را بررسی کند، مطلع می‌شوید."
             )
             return
 
@@ -490,8 +490,8 @@ async def handle_access_callback(query, context: ContextTypes.DEFAULT_TYPE, acti
 
         if created:
             await query.edit_message_text(
-                "✅ Access request submitted!\n\n"
-                "You'll be notified when an admin reviews your request."
+                "✅ درخواست دسترسی ارسال شد!\n\n"
+                "وقتی ادمین درخواست شما را بررسی کند، مطلع می‌شوید."
             )
 
             # Notify admin
@@ -505,9 +505,9 @@ async def handle_access_callback(query, context: ContextTypes.DEFAULT_TYPE, acti
                     await context.bot.send_message(
                         chat_id=config.admin_user_id,
                         text=(
-                            "🔔 *New Access Request*\n\n"
+                            "🔔 *درخواست دسترسی جدید*\n\n"
                             f"{user_info}\n\n"
-                            "Review this request:"
+                            "این درخواست را بررسی کنید:"
                         ),
                         reply_markup=admin_access_decision_keyboard(user.id),
                         parse_mode="Markdown",
@@ -516,8 +516,8 @@ async def handle_access_callback(query, context: ContextTypes.DEFAULT_TYPE, acti
                     logger.exception(f"Failed to notify admin about access request from {user.id}")
         else:
             await query.edit_message_text(
-                "⚠️ You already have an access request on file.\n"
-                "Please wait for admin review."
+                "⚠️ شما از قبل یک درخواست دسترسی ثبت کرده‌اید.\n"
+                "لطفاً منتظر بررسی ادمین باشید."
             )
 
 
@@ -528,27 +528,27 @@ async def handle_admin_callback(query, context: ContextTypes.DEFAULT_TYPE, actio
 
     # Verify that the user clicking is the admin
     if admin_user.id != config.admin_user_id:
-        await query.answer("You are not authorized to perform this action.", show_alert=True)
+        await query.answer("شما مجاز به انجام این عمل نیستید.", show_alert=True)
         return
 
     # Parse action: approve:{telegram_id} or deny:{telegram_id}
     parts = action.split(":", 1)
     if len(parts) != 2:
-        await query.answer("Invalid action", show_alert=True)
+        await query.answer("عمل نامعتبر", show_alert=True)
         return
 
     decision, telegram_id_str = parts
     try:
         telegram_id = int(telegram_id_str)
     except ValueError:
-        await query.answer("Invalid user ID", show_alert=True)
+        await query.answer("شناسه کاربر نامعتبر", show_alert=True)
         return
 
     if decision == "approve":
         success = user_service.approve_user(telegram_id, admin_user.id)
         if success:
             await query.edit_message_text(
-                query.message.text + "\n\n✅ *Approved* by you"
+                query.message.text + "\n\n✅ *تایید‌شده* توسط شما"
             , parse_mode="Markdown")
 
             # Notify the user
@@ -556,22 +556,22 @@ async def handle_admin_callback(query, context: ContextTypes.DEFAULT_TYPE, actio
                 await context.bot.send_message(
                     chat_id=telegram_id,
                     text=(
-                        "🎉 *Access Granted!*\n\n"
-                        "Your request has been approved. You can now use the bot.\n\n"
-                        "Send me a URL to download media, or use /help for more info."
+                        "🎉 *دسترسی تایید شد!*\n\n"
+                        "درخواست شما تایید شده است. اکنون می‌توانید از ربات استفاده کنید.\n\n"
+                        "یک لینک برای دانلود بفرستید، یا از /help برای اطلاعات بیشتر استفاده کنید."
                     ),
                     parse_mode="Markdown",
                 )
             except Exception:
                 logger.exception(f"Failed to notify user {telegram_id} about approval")
         else:
-            await query.answer("Failed to approve user", show_alert=True)
+            await query.answer("تایید کاربر ناموفق بود", show_alert=True)
 
     elif decision == "deny":
         success = user_service.deny_user(telegram_id, admin_user.id)
         if success:
             await query.edit_message_text(
-                query.message.text + "\n\n❌ *Denied* by you"
+                query.message.text + "\n\n❌ *رد‌شده* توسط شما"
             , parse_mode="Markdown")
 
             # Notify the user
@@ -579,16 +579,16 @@ async def handle_admin_callback(query, context: ContextTypes.DEFAULT_TYPE, actio
                 await context.bot.send_message(
                     chat_id=telegram_id,
                     text=(
-                        "⛔ *Access Denied*\n\n"
-                        "Your access request was not approved.\n"
-                        "This is a private bot for personal use only."
+                        "⛔ *دسترسی رد شد*\n\n"
+                        "درخواست دسترسی شما تایید نشد.\n"
+                        "این ربات خصوصی است و فقط برای استفاده شخصی است."
                     ),
                     parse_mode="Markdown",
                 )
             except Exception:
                 logger.exception(f"Failed to notify user {telegram_id} about denial")
         else:
-            await query.answer("Failed to deny user", show_alert=True)
+            await query.answer("رد کاربر ناموفق بود", show_alert=True)
 
 
 async def _handle_format_selection(query, context, url: str, is_audio: bool):
@@ -597,7 +597,7 @@ async def _handle_format_selection(query, context, url: str, is_audio: bool):
     emoji = "🎵" if is_audio else "🎬"
 
     # Show waiting message
-    await query.edit_message_text("⏳ Please wait, analyzing available qualities...")
+    await query.edit_message_text("⏳ لطفاً صبر کنید، در حال تحلیل کیفیت‌های موجود...")
 
     # Get available formats
     downloader = Downloader()
@@ -614,12 +614,12 @@ async def _handle_format_selection(query, context, url: str, is_audio: bool):
 
     if is_audio:
         if not formats_result.audio_formats:
-            await _show_fallback_keyboard(query, is_audio, emoji, "No audio formats detected")
+            await _show_fallback_keyboard(query, is_audio, emoji, "هیچ فرمت صوتی‌ای شناسایی نشد")
             return
         keyboard = dynamic_audio_quality_keyboard(formats_result.audio_formats)
     else:
         if not formats_result.video_formats:
-            await _show_fallback_keyboard(query, is_audio, emoji, "No video formats detected")
+            await _show_fallback_keyboard(query, is_audio, emoji, "هیچ فرمت ویدیویی شناسایی نشد")
             return
         keyboard = dynamic_video_quality_keyboard(formats_result.video_formats)
 
@@ -637,7 +637,7 @@ async def _show_fallback_keyboard(query, is_audio: bool, emoji: str, error_reaso
 
     await query.edit_message_text(
         f"{emoji} *Choose {format_type} quality:*\n"
-        f"_Using default options ({error_reason})_",
+        f"_استفاده از تنظیمات پیش‌فرض ({error_reason})_",
         reply_markup=keyboard,
         parse_mode="Markdown"
     )
@@ -691,7 +691,7 @@ async def start_download(query, url: str, quality, context: ContextTypes.DEFAULT
     quality_str = str(quality.value) if hasattr(quality, "value") else str(quality)
 
     # Update message to show queuing
-    await query.edit_message_text("⏳ Adding to queue...")
+    await query.edit_message_text("⏳ در حال افزودن به صف...")
 
     # Create progress callback
     async def progress_callback(percent: float, status: str):
@@ -701,13 +701,13 @@ async def start_download(query, url: str, quality, context: ContextTypes.DEFAULT
                 await context.bot.edit_message_text(
                     chat_id=chat_id,
                     message_id=message_id,
-                    text=f"⬇️ Downloading...\n{progress_bar} {percent:.0f}%"
+                    text=f"⬇️ در حال دانلود...\n{progress_bar} {percent:.0f}%"
                 )
             elif status == "processing":
                 await context.bot.edit_message_text(
                     chat_id=chat_id,
                     message_id=message_id,
-                    text="🔄 Processing..."
+                    text="🔄 در حال پردازش..."
                 )
             elif status.startswith("complete|"):
                 # Split from right first to get filesize (last field, no pipes)
@@ -738,7 +738,7 @@ async def start_download(query, url: str, quality, context: ContextTypes.DEFAULT
                 await context.bot.edit_message_text(
                     chat_id=chat_id,
                     message_id=message_id,
-                    text=f"❌ Download failed:\n{error_msg}"
+                    text=f"❌ دانلود ناموفق:\n{error_msg}"
                 )
         except Exception:
             logger.exception("Error in progress callback")
@@ -759,7 +759,7 @@ async def start_download(query, url: str, quality, context: ContextTypes.DEFAULT
         await context.bot.edit_message_text(
             chat_id=chat_id,
             message_id=message_id,
-            text=f"📋 Added to queue (position #{position})"
+            text=f"📋 به صف اضافه شد (جایگاه #{position})"
         )
 
 
@@ -777,21 +777,21 @@ async def start_playlist_download(query, url: str, quality, context: ContextType
     quality_str = str(quality.value) if hasattr(quality, "value") else str(quality)
 
     # Show extraction message
-    await query.edit_message_text("⏳ Extracting playlist entries...")
+    await query.edit_message_text("⏳ در حال استخراج آیتم‌های پلی‌لیست...")
 
     # Get playlist info
     downloader = Downloader()
     playlist_info = await downloader.get_playlist_info(url)
 
     if not playlist_info or not playlist_info.entries:
-        await query.edit_message_text("❌ Could not extract playlist entries.")
+        await query.edit_message_text("❌ استخراج آیتم‌های پلی‌لیست ممکن نبود.")
         return
 
     total = playlist_info.count
     await query.edit_message_text(
-        f"📋 *Downloading playlist: {playlist_info.title}*\n\n"
-        f"Items: 0/{total} completed\n"
-        f"Status: Starting...",
+        f"📋 *دانلود پلی‌لیست: {playlist_info.title}*\n\n"
+        f"آیتم‌ها: ۰/{total} تکمیل‌شده\n"
+        f"وضعیت: در حال شروع...",
         parse_mode="Markdown"
     )
 
@@ -806,9 +806,9 @@ async def start_playlist_download(query, url: str, quality, context: ContextType
             chat_id=chat_id,
             message_id=message_id,
             text=(
-                f"📋 *Downloading playlist: {playlist_info.title}*\n\n"
-                f"Items: {completed}/{total} completed ({failed} failed)\n"
-                f"Current: {entry.title[:50]}..."
+                f"📋 *دانلود پلی‌لیست: {playlist_info.title}*\n\n"
+                f"آیتم‌ها: {completed}/{total} تکمیل‌شده ({failed} ناموفق)\n"
+                f"فعلی: {entry.title[:50]}..."
             ),
             parse_mode="Markdown"
         )
@@ -831,29 +831,25 @@ async def start_playlist_download(query, url: str, quality, context: ContextType
                 title=entry.title,
                 user_id=user_id,
             )
-
-            # Auto-cleanup: delete local file after recording stats
-            if config.auto_cleanup:
-                cleanup_file(result.filepath)
         else:
             failed += 1
             logger.warning(f"Failed to download playlist item {entry.index}: {result.error_message}")
 
     # Final summary
     summary_text = (
-        f"📋 *Playlist complete: {playlist_info.title}*\n\n"
-        f"✅ Downloaded: {completed}/{total}\n"
+        f"📋 *پلی‌لیست تکمیل شد: {playlist_info.title}*\n\n"
+        f"✅ دانلود‌شده: {completed}/{total}\n"
     )
     if failed > 0:
-        summary_text += f"❌ Failed: {failed}\n"
+        summary_text += f"❌ ناموفق: {failed}\n"
 
     # List first few successful downloads
     if results:
-        summary_text += "\n*Downloaded files:*\n"
+        summary_text += "\n*فایل‌های دانلود‌شده:*\n"
         for i, (title, filepath, size_mb) in enumerate(results[:5]):
             summary_text += f"• {title[:40]}... ({size_mb:.1f} MB)\n"
         if len(results) > 5:
-            summary_text += f"_... and {len(results) - 5} more_\n"
+            summary_text += f"_... و {len(results) - 5} مورد دیگر_\n"
 
     await context.bot.edit_message_text(
         chat_id=chat_id,
@@ -872,7 +868,7 @@ async def handle_download_complete(bot, chat_id: int, message_id: int, filepath:
         await bot.edit_message_text(
             chat_id=chat_id,
             message_id=message_id,
-            text="📤 Uploading..."
+            text="📤 در حال آپلود..."
         )
 
         try:
@@ -895,19 +891,15 @@ async def handle_download_complete(bot, chat_id: int, message_id: int, filepath:
             await bot.edit_message_text(
                 chat_id=chat_id,
                 message_id=message_id,
-                text=f"✅ Downloaded: {title}\n📁 Size: {filesize_mb:.1f} MB"
+                text=f"✅ دانلود شد: {title}\n📁 حجم: {filesize_mb:.1f} MB"
             )
-
-            # Auto-cleanup: delete local file after successful send
-            if config.auto_cleanup:
-                cleanup_file(filepath)
 
         except OSError:
             logger.exception(f"Failed to send file: {filepath}")
             await bot.edit_message_text(
                 chat_id=chat_id,
                 message_id=message_id,
-                text=f"✅ Downloaded but couldn't send:\n{title}\n📁 Size: {filesize_mb:.1f} MB\n📍 Saved to: {filepath}"
+                text=f"✅ دانلود شد ولی ارسال نشد:\n{title}\n📁 حجم: {filesize_mb:.1f} MB\n📍 ذخیره در: {filepath}"
             )
     else:
         # File too large for Telegram - generate download link
@@ -920,8 +912,8 @@ async def handle_download_complete(bot, chat_id: int, message_id: int, filepath:
                 text=(
                     f"✅ Downloaded: {title}\n"
                     f"📁 Size: {filesize_mb:.1f} MB\n\n"
-                    f"⚠️ File exceeds {config.max_file_size_mb}MB Telegram limit.\n\n"
-                    f"📥 Download: {download_link.url}"
+                    f"⚠️ فایل از محدودیت {config.max_file_size_mb}MB تلگرام بیشتر است.\n\n"
+                    f"📥 دانلود: {download_link.url}"
                 ),
                 reply_markup=file_delete_keyboard(download_link.token),
             )
@@ -933,8 +925,8 @@ async def handle_download_complete(bot, chat_id: int, message_id: int, filepath:
                 text=(
                     f"✅ Downloaded: {title}\n"
                     f"📁 Size: {filesize_mb:.1f} MB\n\n"
-                    f"⚠️ File exceeds {config.max_file_size_mb}MB limit.\n"
-                    f"📍 Saved to: {filepath}"
+                    f"⚠️ فایل از محدودیت {config.max_file_size_mb}MB بیشتر است.\n"
+                    f"📍 ذخیره در: {filepath}"
                 )
             )
 
