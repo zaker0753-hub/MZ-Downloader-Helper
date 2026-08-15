@@ -19,7 +19,8 @@ def whitelist_only(func: Callable[[Update, ContextTypes.DEFAULT_TYPE], Coroutine
     Uses hybrid authorization:
     1. First checks env-based allowed_user_ids (always takes priority)
     2. Then checks DB for approved users
-    3. Shows "Request Access" button for unauthorized users
+    3. Auto-approves new users on first access
+    4. Shows "Request Access" button for unauthorized users
 
     Note: ACCESS_PREFIX callbacks are always allowed (so users can request access).
     ADMIN_PREFIX callbacks require the user to be the admin.
@@ -51,8 +52,15 @@ def whitelist_only(func: Callable[[Update, ContextTypes.DEFAULT_TYPE], Coroutine
         if user_service.is_user_allowed(user.id):
             return await func(update, context)
 
-        # User is not allowed - check their status
+        # Auto-approve new users on first access
         user_status = user_service.get_user_status(user.id)
+        if user_status is None or user_status == "":
+            # New user - auto-approve them
+            user_service.approve_user(user.id, admin_id=None)
+            logger.info(f"Auto-approved new user {user.id} (@{user.username})")
+            return await func(update, context)
+
+        # User has a status but isn't approved
         logger.warning(f"Unauthorized access attempt from user {user.id} (@{user.username}), status: {user_status}")
 
         if update.message:
