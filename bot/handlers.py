@@ -42,7 +42,7 @@ from bot.keyboards import (
 from bot.llm_service import llm_service
 from bot.middleware import whitelist_only
 from bot.stats_service import stats_service
-from bot.storage import detect_platform, is_file_within_limit
+from bot.storage import cleanup_file, detect_platform, is_file_within_limit
 from bot.user_service import user_service
 from config import get_config
 
@@ -831,6 +831,10 @@ async def start_playlist_download(query, url: str, quality, context: ContextType
                 title=entry.title,
                 user_id=user_id,
             )
+
+            # Auto-cleanup: delete local file after recording stats
+            if config.auto_cleanup:
+                cleanup_file(result.filepath)
         else:
             failed += 1
             logger.warning(f"Failed to download playlist item {entry.index}: {result.error_message}")
@@ -893,6 +897,10 @@ async def handle_download_complete(bot, chat_id: int, message_id: int, filepath:
                 message_id=message_id,
                 text=f"✅ Downloaded: {title}\n📁 Size: {filesize_mb:.1f} MB"
             )
+
+            # Auto-cleanup: delete local file after successful send
+            if config.auto_cleanup:
+                cleanup_file(filepath)
 
         except OSError:
             logger.exception(f"Failed to send file: {filepath}")

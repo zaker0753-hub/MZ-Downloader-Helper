@@ -20,11 +20,11 @@ def format_selection_keyboard() -> InlineKeyboardMarkup:
     """Create keyboard for format selection (audio/video)."""
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🎵 Audio", callback_data=f"{FORMAT_PREFIX}audio"),
-            InlineKeyboardButton("🎬 Video", callback_data=f"{FORMAT_PREFIX}video"),
+            InlineKeyboardButton("🎵 صدا", callback_data=f"{FORMAT_PREFIX}audio"),
+            InlineKeyboardButton("🎬 ویدیو", callback_data=f"{FORMAT_PREFIX}video"),
         ],
         [
-            InlineKeyboardButton("❌ Cancel", callback_data=f"{CANCEL_PREFIX}download"),
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
         ]
     ])
 
@@ -38,11 +38,11 @@ def audio_quality_keyboard() -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton("320 kbps", callback_data=f"{QUALITY_PREFIX}audio_320"),
-            InlineKeyboardButton("🌟 Best", callback_data=f"{QUALITY_PREFIX}audio_best"),
+            InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}audio_best"),
         ],
         [
-            InlineKeyboardButton("⬅️ Back", callback_data=f"{FORMAT_PREFIX}back"),
-            InlineKeyboardButton("❌ Cancel", callback_data=f"{CANCEL_PREFIX}download"),
+            InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
         ]
     ])
 
@@ -56,11 +56,11 @@ def video_quality_keyboard() -> InlineKeyboardMarkup:
         ],
         [
             InlineKeyboardButton("1080p", callback_data=f"{QUALITY_PREFIX}video_1080"),
-            InlineKeyboardButton("🌟 Best", callback_data=f"{QUALITY_PREFIX}video_best"),
+            InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}video_best"),
         ],
         [
-            InlineKeyboardButton("⬅️ Back", callback_data=f"{FORMAT_PREFIX}back"),
-            InlineKeyboardButton("❌ Cancel", callback_data=f"{CANCEL_PREFIX}download"),
+            InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
         ]
     ])
 
@@ -84,12 +84,12 @@ def dynamic_video_quality_keyboard(formats: list["VideoFormat"]) -> InlineKeyboa
         buttons.append(row)
 
     # Add "Best" option
-    buttons.append([InlineKeyboardButton("🌟 Best", callback_data=f"{QUALITY_PREFIX}video_best")])
+    buttons.append([InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}video_best")])
 
     # Add navigation buttons
     buttons.append([
-        InlineKeyboardButton("⬅️ Back", callback_data=f"{FORMAT_PREFIX}back"),
-        InlineKeyboardButton("❌ Cancel", callback_data=f"{CANCEL_PREFIX}download"),
+        InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+        InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
     ])
 
     return InlineKeyboardMarkup(buttons)
@@ -114,12 +114,12 @@ def dynamic_audio_quality_keyboard(formats: list["AudioFormat"]) -> InlineKeyboa
         buttons.append(row)
 
     # Add "Best" option
-    buttons.append([InlineKeyboardButton("🌟 Best", callback_data=f"{QUALITY_PREFIX}audio_best")])
+    buttons.append([InlineKeyboardButton("🌟 بهترین", callback_data=f"{QUALITY_PREFIX}audio_best")])
 
     # Add navigation buttons
     buttons.append([
-        InlineKeyboardButton("⬅️ Back", callback_data=f"{FORMAT_PREFIX}back"),
-        InlineKeyboardButton("❌ Cancel", callback_data=f"{CANCEL_PREFIX}download"),
+        InlineKeyboardButton("⬅️ بازگشت", callback_data=f"{FORMAT_PREFIX}back"),
+        InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
     ])
 
     return InlineKeyboardMarkup(buttons)
@@ -130,18 +130,18 @@ def playlist_confirmation_keyboard(count: int) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup([
         [
             InlineKeyboardButton(
-                f"✅ Download all {count} items",
+                f"✅ دانلود همه {count} آیتم",
                 callback_data=f"{CONFIRM_PREFIX}playlist"
             ),
         ],
         [
             InlineKeyboardButton(
-                "📄 First item only",
+                "📄 فقط اولین آیتم",
                 callback_data=f"{CONFIRM_PREFIX}single"
             ),
         ],
         [
-            InlineKeyboardButton("❌ Cancel", callback_data=f"{CANCEL_PREFIX}download"),
+            InlineKeyboardButton("❌ انصراف", callback_data=f"{CANCEL_PREFIX}download"),
         ]
     ])
 
@@ -150,7 +150,7 @@ def file_delete_keyboard(token: str) -> InlineKeyboardMarkup:
     """Create keyboard with delete button for large files."""
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🗑️ Delete from server", callback_data=f"{DELETE_PREFIX}{token}"),
+            InlineKeyboardButton("🗑️ حذف از سرور", callback_data=f"{DELETE_PREFIX}{token}"),
         ]
     ])
 
@@ -159,7 +159,7 @@ def request_access_keyboard() -> InlineKeyboardMarkup:
     """Create keyboard with request access button for unauthorized users."""
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("🔐 Request Access", callback_data=f"{ACCESS_PREFIX}request"),
+            InlineKeyboardButton("🔐 درخواست دسترسی", callback_data=f"{ACCESS_PREFIX}request"),
         ]
     ])
 
@@ -168,8 +168,8 @@ def admin_access_decision_keyboard(telegram_id: int) -> InlineKeyboardMarkup:
     """Create keyboard for admin to approve/deny access request."""
     return InlineKeyboardMarkup([
         [
-            InlineKeyboardButton("✅ Approve", callback_data=f"{ADMIN_PREFIX}approve:{telegram_id}"),
-            InlineKeyboardButton("❌ Deny", callback_data=f"{ADMIN_PREFIX}deny:{telegram_id}"),
+            InlineKeyboardButton("✅ تایید", callback_data=f"{ADMIN_PREFIX}approve:{telegram_id}"),
+            InlineKeyboardButton("❌ رد", callback_data=f"{ADMIN_PREFIX}deny:{telegram_id}"),
         ]
     ])
 
